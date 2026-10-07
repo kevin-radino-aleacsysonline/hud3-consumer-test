@@ -1,0 +1,24 @@
+# Common ignore
+/node_modules
+/*.log
+/*.error
+# From build - rollup
+/dist/bundle
+/pack
+.env
+.yarn
+
+# Yarn specific ignore
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+# Custom
+.env.*
+/dist
+# From build - webpack
+# From build - tsc
+/dist/lib
+/dist/types
