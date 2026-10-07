@@ -73,20 +73,39 @@ hud.settings.onQuit.add(() => {
 
 hud.mount(game);
 
-const rect = game.getBoundingClientRect();
+const LANDSCAPE_DESIGN_SIZE = { width: 1200, height: 675 };
+const PORTRAIT_DESIGN_SIZE = { width: 675, height: 1200 };
 
-hud.resize({
-    layout: HudLayout.Desktop,
+const isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 0;
 
-    size: {
-        width: rect.width,
-        height: rect.height,
-    },
+function isMobile(): boolean {
+    return window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+}
 
-    designSize: {
-        width: 1200,
-        height: 675,
-    },
+function getLayout(width: number, height: number): HudLayout {
+    if (!isMobile()) {
+        return HudLayout.Desktop;
+    }
 
-    scale: Math.min(rect.width / 1200, rect.height / 675),
-});
+    return height > width ? HudLayout.MobilePortrait : HudLayout.MobileLandscape;
+}
+
+function resize(): void {
+    const { width, height } = game!.getBoundingClientRect();
+    const layout = getLayout(width, height);
+    const baseSize = layout === HudLayout.MobilePortrait ? PORTRAIT_DESIGN_SIZE : LANDSCAPE_DESIGN_SIZE;
+    const scale = Math.min(width / baseSize.width, height / baseSize.height);
+
+    hud.resize({
+        layout,
+        size: { width, height },
+        designSize: { width: width / scale, height: height / scale },
+        scale,
+        isApple,
+    });
+}
+
+new ResizeObserver(resize).observe(game);
+window.addEventListener('orientationchange', resize);
+
+resize();

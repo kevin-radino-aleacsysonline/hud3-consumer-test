@@ -19,18 +19,18 @@
             }
 
             body {
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                overflow: hidden;
 
                 background: #111;
             }
 
             #game {
-                position: relative;
+                position: fixed;
+                inset: 0;
 
-                width: min(1200px, 100%);
-                aspect-ratio: 16 / 9;
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
 
                 overflow: hidden;
 
